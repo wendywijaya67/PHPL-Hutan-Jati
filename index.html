@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHPL Hutan Jati</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background-color: #006039;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            color: #a37e2c;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #005033;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #a37e2c;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Styles */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        section h2 {
+            color: #006039;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #a37e2c;
+            padding-bottom: 0.5rem;
+        }
+
+        section p {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        /* Widget Styles */
+        .widget-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .widget {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+            border: 2px solid #006039;
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .widget:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 15px rgba(0, 96, 57, 0.3);
+            border-color: #a37e2c;
+        }
+
+        .widget-header {
+            color: #006039;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .widget-icon {
+            font-size: 1.5rem;
+            color: #a37e2c;
+        }
+
+        .widget-content {
+            color: #555;
+            font-size: 0.95rem;
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #a37e2c;
+        }
+
+        .widget.active .widget-content {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .widget-toggle {
+            float: right;
+            color: #006039;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .widget.active .widget-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Info Box */
+        .info-box {
+            background-color: #f0f8f4;
+            border-left: 4px solid #006039;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .info-box strong {
+            color: #006039;
+        }
+
+        /* Benefits Section */
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .benefit-item {
+            background-color: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #a37e2c;
+        }
+
+        .benefit-item h3 {
+            color: #006039;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-item p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #006039;
+            color: #ffffff;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 1rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .instagram-logo {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 99;
+        }
+
+        .instagram-logo:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 6px 20px rgba(220, 39, 67, 0.4);
+        }
+
+        .instagram-logo i {
+            color: #ffffff;
+            font-size: 1.8rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            header p {
+                font-size: 0.95rem;
+            }
+
+            nav a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            section h2 {
+                font-size: 1.5rem;
+            }
+
+            .widget-container {
+                grid-template-columns: 1fr;
+            }
+
+            .instagram-logo {
+                width: 50px;
+                height: 50px;
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+
+            .instagram-logo i {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            section h2 {
+                font-size: 1.3rem;
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            nav a {
+                font-size: 0.9rem;
+                margin: 0.3rem 0;
+            }
+        }
+
+        /* Additional Styles */
+        .intro-text {
+            background: linear-gradient(135deg, #f0f8f4 0%, #ffffff 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 5px solid #a37e2c;
+            margin-bottom: 2rem;
+        }
+
+        .intro-text h3 {
+            color: #006039;
+            margin-bottom: 1rem;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #006039 0%, #005033 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>🌳 PHPL Hutan Jati</h1>
+        <p>Pemberdayaan Hutan Produksi Lestari</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#pengertian">Pengertian</a>
+        <a href="#manfaat">Manfaat</a>
+        <a href="#pengelolaan">Pengelolaan</a>
+        <a href="#tantangan">Tantangan</a>
+        <a href="#kesimpulan">Kesimpulan</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction -->
+        <div class="intro-text">
+            <h3>Selamat Datang di Informasi PHPL Hutan Jati</h3>
+            <p>Hutan jati merupakan aset berharga yang memerlukan pengelolaan berkelanjutan untuk menjaga kelestarian lingkungan dan kesejahteraan masyarakat. Website ini menyediakan informasi lengkap tentang Pemberdayaan Hutan Produksi Lestari (PHPL) dalam konteks hutan jati di Indonesia.</p>
+        </div>
+
+        <!-- Section 1: Pengertian -->
+        <section id="pengertian">
+            <h2>📚 Pengertian PHPL Hutan Jati</h2>
+            
+            <p>Pemberdayaan Hutan Produksi Lestari (PHPL) adalah suatu konsep pengelolaan hutan yang bertujuan untuk meningkatkan produktivitas hutan sambil menjaga kelestarian lingkungan. Hutan jati merupakan salah satu jenis hutan produksi yang potensial untuk dikelola dengan sistem PHPL.</p>
+
+            <div class="info-box">
+                <strong>💡 Definisi:</strong> PHPL adalah pendekatan pengelolaan hutan yang mengintegrasikan aspek ekonomi, ekologi, dan sosial untuk mencapai pembangunan hutan yang berkelanjutan.
+            </div>
+
+            <div class="widget-container">
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🌿 Hutan Jati
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Jati (Tectona grandis) adalah pohon berkayu keras yang memiliki nilai ekonomi tinggi. Kayu jati terkenal dengan kualitasnya yang tahan lama dan tahan terhadap hama serta penyakit. Potensi jati sebagai komoditas ekspor menjadikan hutan jati sangat penting bagi perekonomian nasional.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🌍 Hutan Produksi
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Hutan produksi adalah kawasan hutan yang ditetapkan untuk dimanfaatkan secara lestari dalam menghasilkan kayu maupun hasil hutan lainnya. Fungsi utamanya adalah menyediakan bahan baku industri sambil tetap menjaga fungsi hidrologi dan keseimbangan lingkungan.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        ♻️ Keberlanjutan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Keberlanjutan dalam pengelolaan hutan jati berarti memastikan bahwa hutan dapat terus memberikan manfaat ekonomi tanpa mengorbankan kemampuannya untuk tumbuh dan berkembang di masa depan. Ini melibatkan praktik penebangan yang bertanggung jawab dan penanaman kembali.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Manfaat -->
+        <section id="manfaat">
+            <h2>🎯 Manfaat PHPL Hutan Jati</h2>
+            
+            <p>Implementasi PHPL pada hutan jati memberikan berbagai manfaat yang signifikan bagi lingkungan, ekonomi, dan masyarakat lokal.</p>
+
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <h3>💰 Manfaat Ekonomi</h3>
+                    <p>Menghasilkan pendapatan yang berkelanjutan melalui penjualan kayu jati berkualitas tinggi. Menciptakan lapangan kerja bagi masyarakat lokal dalam kegiatan pengelolaan hutan.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <h3>🌱 Manfaat Lingkungan</h3>
+                    <p>Menjaga keseimbangan ekosistem hutan dan menjaga keanekaragaman hayati. Memperkuat peran hutan dalam mitigasi perubahan iklim melalui penyerapan karbon.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <h3>👥 Manfaat Sosial</h3>
+                    <p>Meningkatkan kesejahteraan masyarakat sekitar hutan. Memberdayakan komunitas lokal melalui pendidikan dan pelatihan dalam pengelolaan hutan yang berkelanjutan.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <h3>📊 Manfaat Jangka Panjang</h3>
+                    <p>Memastikan ketersediaan kayu jati untuk generasi mendatang. Membangun kapasitas institusi lokal untuk pengelolaan sumber daya alam yang lebih baik.</p>
+                </div>
+            </div>
+
+            <div class="widget-container">
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        📈 Produktivitas Hutan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>PHPL dirancang untuk meningkatkan produktivitas hutan jati melalui praktik-praktik yang efisien seperti penyiangan, pemupukan, dan pemeliharaan tegakan. Dengan manajemen yang baik, hasil produksi kayu per hektar dapat ditingkatkan secara signifikan dibandingkan dengan pengelolaan konvensional.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🛡️ Perlindungan Lingkungan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>PHPL mengutamakan perlindungan lahan dan air tanah melalui sistem pengelolaan yang ramah lingkungan. Penanaman pohon secara teratur mencegah erosi tanah dan membantu menjaga siklus air, yang sangat penting bagi keseimbangan iklim lokal dan global.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🤝 Partisipasi Komunitas
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>PHPL menekankan pentingnya partisipasi aktif masyarakat lokal dalam perencanaan dan pelaksanaan kegiatan pengelolaan hutan. Keterlibatan komunitas ini tidak hanya meningkatkan efektivitas program tetapi juga memastikan bahwa manfaat ekonomi dapat dinikmati oleh masyarakat setempat.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Pengelolaan -->
+        <section id="pengelolaan">
+            <h2>⚙️ Sistem Pengelolaan PHPL Hutan Jati</h2>
+            
+            <p>Pengelolaan hutan jati dengan sistem PHPL melibatkan serangkaian kegiatan yang terkoordinasi dan berkelanjutan untuk mencapai tujuan produksi dan konservasi.</p>
+
+            <div class="info-box">
+                <strong>🔑 Komponen Utama:</strong> Perencanaan, Pelaksanaan, Monitoring, dan Evaluasi adalah empat pilar utama dalam sistem pengelolaan PHPL yang efektif.
+            </div>
+
+            <div class="widget-container">
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        📋 Perencanaan Hutan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Tahap perencanaan meliputi survei lahan, analisis potensi sumber daya, dan penyusunan rencana pengelolaan jangka panjang. Rencana ini harus mempertimbangkan keberlanjutan ekologis, kelayakan ekonomi, dan keadilan sosial bagi semua pemangku kepentingan.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🌳 Penanaman & Pemeliharaan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Kegiatan penanaman meliputi pemilihan bibit berkualitas, persiapan lahan, dan teknik penanaman yang tepat. Pemeliharaan mencakup penyiangan, pembersihan gulma, pemupukan, dan pengendalian hama penyakit untuk memastikan pertumbuhan pohon jati yang optimal.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🪵 Panen & Pemanfaatan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Pemanenan dilakukan sesuai dengan prinsip-prinsip keberlanjutan dan regulasi yang berlaku. Kayu jati yang dipanen digunakan untuk berbagai keperluan industri seperti furnitur, konstruksi, dan kerajinan. Pengolahan limbah kayu juga ditingkatkan untuk efisiensi maksimal.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        📊 Monitoring & Evaluasi
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Monitoring dilakukan secara berkala untuk mengevaluasi kesehatan hutan, pertumbuhan pohon, dan dampak lingkungan. Evaluasi membantu dalam penyesuaian strategi pengelolaan dan memastikan pencapaian target produksi yang telah ditetapkan dalam rencana pengelolaan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Tantangan -->
+        <section id="tantangan">
+            <h2>⚠️ Tantangan dalam Implementasi PHPL Hutan Jati</h2>
+            
+            <p>Meskipun PHPL memiliki potensi besar, implementasinya menghadapi berbagai tantangan yang perlu diatasi untuk mencapai kesuksesan.</p>
+
+            <div class="widget-container">
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🦗 Hama & Penyakit
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Serangan hama dan penyakit tanaman dapat mengurangi pertumbuhan dan produktivitas hutan jati. Pengendalian yang tepat memerlukan pemantauan intensif dan penggunaan teknik pengendalian yang ramah lingkungan, seringkali dengan biaya yang signifikan.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        💰 Keterbatasan Modal
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Implementasi PHPL membutuhkan investasi awal yang cukup besar untuk persiapan lahan, pembelian bibit, dan infrastruktur pengelolaan. Akses terhadap modal usaha untuk petani dan masyarakat lokal masih terbatas di banyak daerah.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        📚 Keterbatasan Pengetahuan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Kurangnya pengetahuan dan keterampilan dalam pengelolaan hutan modern menjadi hambatan dalam implementasi PHPL. Diperlukan program pelatihan yang berkelanjutan untuk meningkatkan kapasitas masyarakat dan pelaksana di lapangan.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        ⚖️ Kebijakan & Regulasi
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Kerangka kebijakan dan regulasi yang masih berkembang dapat menghambat implementasi PHPL. Perlu adanya sinkronisasi antara berbagai regulasi tingkat pusat dan daerah untuk menciptakan lingkungan yang kondusif bagi pengelolaan hutan berkelanjutan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Kesimpulan -->
+        <section id="kesimpulan">
+            <h2>✅ Kesimpulan</h2>
+            
+            <p>Pemberdayaan Hutan Produksi Lestari (PHPL) merupakan strategi yang sangat penting dalam pengelolaan hutan jati di Indonesia. Dengan mengintegrasikan aspek ekonomi, ekologi, dan sosial, PHPL mampu memberikan kontribusi signifikan terhadap pembangunan berkelanjutan.</p>
+
+            <div class="info-box">
+                <strong>📌 Poin Kunci:</strong> PHPL bukan hanya tentang meningkatkan produksi kayu, tetapi juga tentang menjaga kelestarian lingkungan dan memberdayakan masyarakat lokal untuk jangka panjang yang berkelanjutan.
+            </div>
+
+            <div class="widget-container">
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🎯 Visi Masa Depan
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Visi jangka panjang adalah mewujudkan hutan jati yang produktif, lestari, dan memberikan manfaat maksimal bagi semua pemangku kepentingan. Diperlukan komitmen bersama dari pemerintah, masyarakat, dan swasta untuk mewujudkan visi ini dengan strategi yang terukur dan berkelanjutan.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🤲 Aksi Nyata
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Untuk mewujudkan PHPL yang efektif, diperlukan aksi nyata seperti peningkatan investasi dalam penelitian dan pengembangan, penyediaan pelatihan berkelanjutan untuk stakeholder, dan penegakan regulasi yang konsisten untuk melindungi hutan dari eksploitasi berlebihan.</p>
+                    </div>
+                </div>
+
+                <div class="widget" onclick="toggleWidget(this)">
+                    <div class="widget-header">
+                        🌐 Komitmen Bersama
+                        <span class="widget-toggle">▼</span>
+                    </div>
+                    <div class="widget-content">
+                        <p>Kesuksesan PHPL bergantung pada komitmen bersama semua pihak. Masyarakat lokal, pemerintah, dan sektor swasta harus bekerja sama dengan transparansi dan akuntabilitas untuk menciptakan ekosistem pengelolaan hutan yang sehat dan berkelanjutan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">dibuat oleh Gregorius Wendy Wijaya</p>
+        </div>
+    </footer>
+
+    <!-- Instagram Logo -->
+    <a href="https://www.instagram.com/dywendy__/" target="_blank" class="instagram-logo" title="Follow Instagram">
+        <i class="fab fa-instagram"></i>
+    </a>
+
+    <script>
+        function toggleWidget(element) {
+            // Close other widgets in the same container
+            const container = element.parentElement;
+            const widgets = container.querySelectorAll('.widget');
+            
+            widgets.forEach(widget => {
+                if (widget !== element && widget.classList.contains('active')) {
+                    widget.classList.remove('active');
+                }
+            });
+            
+            // Toggle current widget
+            element.classList.toggle('active');
+        }
+
+        // Close widget when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.widget')) {
+                document.querySelectorAll('.widget.active').forEach(widget => {
+                    // Keep it active on click, don't auto-close
+                });
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
